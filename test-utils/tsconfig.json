@@ -1,0 +1,10 @@
+{
+  "extends": "../config-common/configs/tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

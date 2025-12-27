@@ -1,0 +1,58 @@
+{
+  "compilerOptions": {
+    // モジュール設定
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2021",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    // 出力設定
+    "declaration": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+
+    // デコレーター対応（NestJS必須）
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    // 型安全性の強化
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    // コード品質
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
+
+    // パフォーマンス
+    "skipDefaultLibCheck": true,
+
+    // 型定義
+    "lib": ["ES2021"],
+
+    // パス設定のベース
+    "baseUrl": "./"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.e2e-spec.ts",
+    "**/*.integration.spec.ts"
+  ]
+}
