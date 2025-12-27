@@ -1,5 +1,5 @@
 {
-  "name": "@ori-packaging/auth-rbac",
+  "name": "@tom0227/auth-rbac",
   "version": "1.0.0",
   "description": "認証・認可・権限管理の共通パッケージ",
   "main": "dist/index.js",
@@ -69,7 +69,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ori-packaging/ori-system.git",
-    "directory": "common-packages/auth-rbac"
+    "url": "https://github.com/tom0227/common-package.git",
+    "directory": "auth-rbac"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   }
 }

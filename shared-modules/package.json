@@ -38,12 +38,13 @@
   "author": "ORI Development Team",
   "license": "UNLICENSED",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tom0227/oripa.git",
-    "directory": "common-packages/shared-modules"
+    "url": "https://github.com/tom0227/common-package.git",
+    "directory": "shared-modules"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0 || ^11.0.0",

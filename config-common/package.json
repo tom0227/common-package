@@ -1,5 +1,5 @@
 {
-  "name": "@ori-packaging/config-common",
+  "name": "@tom0227/config-common",
   "version": "1.0.0",
   "description": "共通設定ファイル（ESLint、TypeScript、Jest、Prettier）",
   "main": "dist/index.js",
@@ -33,6 +33,15 @@
   ],
   "author": "ORI Package Team",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tom0227/common-package.git",
+    "directory": "config-common"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
   "peerDependencies": {
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

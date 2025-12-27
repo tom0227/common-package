@@ -1,5 +1,5 @@
 {
-  "name": "@ori-packaging/test-utils",
+  "name": "@tom0227/test-utils",
   "version": "1.0.0",
   "description": "ORIパッケージング共通テストユーティリティ",
   "main": "dist/index.js",
@@ -32,6 +32,15 @@
   ],
   "author": "ORI Package Team",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tom0227/common-package.git",
+    "directory": "test-utils"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
   "peerDependencies": {
     "@types/node": "^20.0.0",
     "@nestjs/common": "^10.4.20",
@@ -45,7 +54,7 @@
     "@types/supertest": "^2.0.12"
   },
   "devDependencies": {
-    "@ori-packaging/config-common": "file:../config-common",
+    "@tom0227/config-common": "file:../config-common",
     "@types/jest": "^29.5.2",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

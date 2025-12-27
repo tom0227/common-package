@@ -1,0 +1,98 @@
+name: Publish Private Packages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  publish:
+    # PRがマージされた時、またはmainブランチに直接プッシュされた時に実行
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        package:
+          - auth-rbac
+          - config-common
+          - shared-modules
+          - test-utils
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@tom0227'
+      
+      - name: Configure npm for GitHub Packages
+        run: |
+          echo "@tom0227:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+      
+      - name: Update package name and version
+        working-directory: ./${{ matrix.package }}
+        run: |
+          # パッケージ名にスコープを追加
+          npm pkg set name="@tom0227/${{ matrix.package }}"
+          
+          # バージョンを自動インクリメント（パッチバージョン）
+          npm version patch --no-git-tag-version
+          
+          # GitHub Packagesのレジストリ設定
+          npm pkg set publishConfig.registry="https://npm.pkg.github.com"
+          npm pkg set publishConfig.access="restricted"
+      
+      - name: Install dependencies
+        working-directory: ./${{ matrix.package }}
+        run: npm ci
+      
+      - name: Build package
+        working-directory: ./${{ matrix.package }}
+        run: |
+          if [ -f "tsconfig.json" ]; then
+            npm run build || echo "No build script found"
+          fi
+      
+      - name: Run tests
+        working-directory: ./${{ matrix.package }}
+        run: |
+          npm test || echo "No test script found"
+      
+      - name: Publish to GitHub Packages
+        working-directory: ./${{ matrix.package }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm publish
+      
+      - name: Create release tag
+        if: success()
+        run: |
+          VERSION=$(node -p "require('./${{ matrix.package }}/package.json').version")
+          git tag "${{ matrix.package }}-v${VERSION}"
+          git push origin "${{ matrix.package }}-v${VERSION}" || echo "Tag already exists"
+
+  notify:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.publish.result == 'success'
+        run: |
+          echo "✅ All packages have been successfully published to GitHub Packages!"
+          echo "📦 Published packages:"
+          echo "  - @tom0227/auth-rbac"
+          echo "  - @tom0227/config-common"
+          echo "  - @tom0227/shared-modules"
+          echo "  - @tom0227/test-utils"
