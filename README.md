@@ -1,6 +1,6 @@
 # Common Packages
 
-このリポジトリは、ORIパッケージングシステムで使用する共通パッケージを管理しています。
+このリポジトリは、NestJS アプリケーション開発で使用する共通パッケージを管理しています。
 
 ## パッケージ一覧
 
@@ -25,15 +25,25 @@
 ### 2. GitHub Personal Access Token の設定
 
 1. GitHubの[Personal Access Tokens](https://github.com/settings/tokens)ページへアクセス
-2. "Generate new token" をクリック
+2. "Generate new token (classic)" を選択
 3. 以下のスコープを選択：
    - `read:packages` - パッケージの読み取り
-   - `write:packages` - パッケージの公開（開発者のみ）
-   - `delete:packages` - パッケージの削除（管理者のみ）
-4. トークンを生成し、環境変数に設定：
+4. トークンを生成し、`.npmrc`ファイルに直接追加するか環境変数に設定：
 
+**方法1: .npmrcファイルに直接記載**
+```
+@tom0227:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=your_personal_access_token
+```
+
+**方法2: 環境変数を使用**
 ```bash
 export GITHUB_TOKEN=your_personal_access_token
+```
+そして`.npmrc`に以下を記載：
+```
+@tom0227:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
 ### 3. パッケージのインストール
@@ -53,32 +63,84 @@ npm install @tom0227/auth-rbac @tom0227/config-common @tom0227/shared-modules @t
 
 ### @tom0227/auth-rbac
 
+認証・ロールベースアクセス制御機能を提供します。
+
 ```typescript
-import { AuthRbacModule } from '@tom0227/auth-rbac';
+import { AuthRbacModule, Roles, Permissions } from '@tom0227/auth-rbac';
 import { Module } from '@nestjs/common';
 
 @Module({
   imports: [
     AuthRbacModule.register({
-      // 設定オプション
+      // Auth0設定やロール・権限設定
     }),
   ],
 })
 export class AppModule {}
+
+// 使用例
+@Roles('admin')
+@Permissions('users:read')
+@Controller('users')
+export class UsersController {
+  // ...
+}
+```
+
+### @tom0227/config-common
+
+ESLint、Prettier、Jest、TypeScriptの共通設定を提供します。
+
+```typescript
+// eslint.config.js
+module.exports = require('@tom0227/config-common/configs/eslint.config.js');
+
+// jest.config.js
+module.exports = require('@tom0227/config-common/configs/jest.config.js');
+
+// prettier.config.js
+module.exports = require('@tom0227/config-common/configs/prettier.config.js');
 ```
 
 ### @tom0227/shared-modules
 
+データベース、キャッシュ、ログ等の共有機能を提供します。
+
 ```typescript
-import { PrismaModule, LoggingModule } from '@tom0227/shared-modules';
+import { 
+  PrismaModule, 
+  LoggingModule, 
+  CacheModule,
+  AuthModule 
+} from '@tom0227/shared-modules';
 
 @Module({
   imports: [
     PrismaModule,
     LoggingModule,
+    CacheModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
+```
+
+### @tom0227/test-utils
+
+テスト用のユーティリティ関数を提供します。
+
+```typescript
+import { createTestModule } from '@tom0227/test-utils';
+
+describe('UserService', () => {
+  let module: TestingModule;
+  
+  beforeEach(async () => {
+    module = await createTestModule({
+      // テスト設定
+    });
+  });
+});
 ```
 
 ## 開発者向け情報
@@ -100,18 +162,26 @@ PRがmainブランチにマージされると、GitHub Actionsが自動的に以
 git clone https://github.com/tom0227/common-package.git
 cd common-package
 
-# 依存関係のインストール
-cd auth-rbac && npm install
-cd ../config-common && npm install
-cd ../shared-modules && npm install
-cd ../test-utils && npm install
+# 各パッケージの依存関係をインストール
+cd auth-rbac && npm install && cd ..
+cd config-common && npm install && cd ..
+cd shared-modules && npm install && cd ..
+cd test-utils && npm install && cd ..
 
-# ビルド
-npm run build
-
-# テスト
-npm test
+# 各パッケージのビルド・テスト
+cd auth-rbac && npm run build && npm test && cd ..
+cd config-common && npm run build && npm test && cd ..
+cd shared-modules && npm run build && npm test && cd ..
+cd test-utils && npm run build && npm test && cd ..
 ```
+
+### パッケージ使用前の確認
+
+パッケージを使用する前に、以下を確認してください：
+
+1. **GitHub認証**: `.npmrc`ファイルが正しく設定されている
+2. **パッケージの存在確認**: `npm view @tom0227/パッケージ名` でパッケージが公開されているか確認
+3. **最新バージョンの確認**: `npm view @tom0227/パッケージ名 version` で最新バージョンを確認
 
 ### バージョン管理
 
