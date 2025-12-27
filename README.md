@@ -18,7 +18,7 @@
 プロジェクトのルートディレクトリに`.npmrc`ファイルを作成し、以下の内容を追加します：
 
 ```
-@tom0227:registry=https://npm.pkg.github.com
+@tom0227:registry=https://npm.pkg.github.com/
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
@@ -32,7 +32,7 @@
 
 **方法1: .npmrcファイルに直接記載**
 ```
-@tom0227:registry=https://npm.pkg.github.com
+@tom0227:registry=https://npm.pkg.github.com/
 //npm.pkg.github.com/:_authToken=your_personal_access_token
 ```
 
@@ -42,7 +42,7 @@ export GITHUB_TOKEN=your_personal_access_token
 ```
 そして`.npmrc`に以下を記載：
 ```
-@tom0227:registry=https://npm.pkg.github.com
+@tom0227:registry=https://npm.pkg.github.com/
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
